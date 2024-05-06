@@ -3,18 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 4000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.3.0",
     "@yudiel/react-qr-scanner": "^2.0.0-beta.3",
     "axios": "^1.6.8",
     "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-icons": "^5.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",
