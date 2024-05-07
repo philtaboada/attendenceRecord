@@ -48,7 +48,7 @@ const page = () => {
         })
             .then((response) => {
                 console.log(response)
-                window.location.href = `/congratulations`
+                window.location.href = `/welcomeback`
             })
             .catch((error) => {
                 console.log(error)
@@ -68,7 +68,7 @@ const page = () => {
         })
             .then((response) => {
                 console.log(response)
-                window.location.href = `/congratulations`
+                window.location.href = `/welcomeback`
             })
             .catch((error) => {
                 console.log(error)
