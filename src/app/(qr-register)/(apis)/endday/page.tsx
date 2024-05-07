@@ -1,15 +1,16 @@
 'use client'
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useZxing } from 'react-zxing';
 
 const apiRoute = 'https://fidenzaasistencia.ue.r.appspot.com/api/'
-
 
 const page = () => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [result, setResult] = useState("");
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [horaPeru, setHoraPeru] = useState("");
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { ref } = useZxing({
         onDecodeResult(result) {
@@ -18,13 +19,22 @@ const page = () => {
         },
     });
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+        const updatedHoraPeru = () => {
+            const now = new Date();
+            const options = { timeZone: 'America/Lima' };
+            const hours = now.toLocaleString('en-US', options).split(',')[1].split(':')[0];
+            const minutes = now.toLocaleString('en-US', options).split(',')[1].split(':')[1];
+            const seconds = now.toLocaleString('en-US', options).split(',')[1].split(':')[2].split(' ')[0];
+            const horaPeru = `${hours}:${minutes}:${seconds}`;
+            setHoraPeru(horaPeru);
+        }
 
-    const now = new Date();
-    const options = { timeZone: 'America/Lima' };
-    const hours = now.toLocaleString('en-US', options).split(',')[1].split(':')[0];
-    const minutes = now.toLocaleString('en-US', options).split(',')[1].split(':')[1];
-    const seconds = now.toLocaleString('en-US', options).split(',')[1].split(':')[2].split(' ')[0];
-    const horaPeru = `${hours}:${minutes}:${seconds}`;
+        const interval = setInterval(updatedHoraPeru, 1000);
+
+        return () => clearInterval(interval);
+    }, [])
 
     const onSubmit = (event: any) => {
         event.preventDefault()
@@ -66,14 +76,14 @@ const page = () => {
             })
     }
 
-
     return (
         <>
             <div className="flex flex-col justify-center w-screen h-screen" >
                 <p className='text-center font-bold text-lg mb-6'>Coloca tu QR cerca a la cámara</p>
 
-                <div className='flex justify-center w-[100%] h-[80%]'>
+                <div className='flex flex-col items-center justify-center w-[100%] h-[60%]'>
                     <video className='w-[450px] h-[450px]' ref={ref} />
+                    <dt className="mb-2 text-3xl md:text-4xl font-extrabold">{horaPeru}</dt>
                 </div>
 
                 <div className='flex flex-col justify-center items-center my-14 mx-12'>
