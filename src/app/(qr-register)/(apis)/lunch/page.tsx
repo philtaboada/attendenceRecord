@@ -1,14 +1,22 @@
 'use client'
-import { Scanner } from '@yudiel/react-qr-scanner';
 import axios from 'axios';
 import React, { useState } from 'react'
+import { useZxing } from 'react-zxing';
 
 const apiRoute = 'https://fidenzaasistencia.ue.r.appspot.com/api/'
 
 const page = () => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [number, setNumber] = useState('')
+    const [result, setResult] = useState("");
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { ref } = useZxing({
+        onDecodeResult(result) {
+            setResult(result.getText());
+            readedQr(result.getText())
+        },
+    });
+
 
     const now = new Date();
     const options = { timeZone: 'America/Lima' };
@@ -20,7 +28,7 @@ const page = () => {
     const onSubmit = (event: any) => {
         event.preventDefault()
 
-        axios.put(`${apiRoute}lunchTime/${number}`, {
+        axios.put(`${apiRoute}lunchTime/${result}`, {
             "data": {
                 "date": new Date().toLocaleDateString('es-ES', { timeZone: 'America/Lima' }).split(',')[0],
                 "workStartTime": " ",
@@ -51,7 +59,7 @@ const page = () => {
             })
             .catch((error) => {
                 console.log(error)
-                window.location.href = `/notagain`
+                //window.location.href = `/notagain`
             })
     }
 
@@ -61,15 +69,9 @@ const page = () => {
             <div className="flex flex-col justify-center w-screen h-screen" >
                 <p className='text-center font-bold text-lg mb-6'>Coloca tu QR cerca a la cámara</p>
 
-                <Scanner
-                    onResult={(text) => readedQr(text)}
-                    onError={(error) => console.log(error?.message)}
-                    components={
-                        {
-                            audio: false,
-                        }
-                    }
-                />
+                <div className='flex justify-center w-[100%] h-[80%]'>
+                    <video className='w-[450px] h-[450px]' ref={ref} />
+                </div>
 
                 <div className='flex flex-col justify-center items-center my-14 mx-12'>
                     <h3 className='text-center mb-4'>
@@ -77,8 +79,8 @@ const page = () => {
                     </h3>
                     <form onSubmit={(event) => onSubmit(event)} className='flex flex-col justify-center items-center'>
                         <input
-                            value={number}
-                            onChange={(event) => setNumber(event.target.value)}
+                            value={result}
+                            onChange={(event) => setResult(event.target.value)}
                             placeholder='Ingresa tu DNI'
                             className="mb-3 peer block min-h-[auto] w-full rounded border-2 bg-white px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-black dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0" type="text" />
                         <button
