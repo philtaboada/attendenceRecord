@@ -8,6 +8,8 @@ const apiRoute = 'https://fidenzaasistencia.ue.r.appspot.com/api/'
 const page = () => {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [isLoading, setIsLoading] = useState(false)
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const [result, setResult] = useState("");
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [horaPeru, setHoraPeru] = useState("");
@@ -37,6 +39,7 @@ const page = () => {
     }, [])
 
     const onSubmit = (event: any) => {
+        setIsLoading(true)
         event.preventDefault()
 
         axios.put(`${apiRoute}lunchReturnTime/${result}`, {
@@ -96,11 +99,20 @@ const page = () => {
                             onChange={(event) => setResult(event.target.value)}
                             placeholder='Ingresa tu DNI'
                             className="mb-3 peer block min-h-[auto] w-full rounded border-2 bg-white px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-black dark:placeholder:text-neutral-300 dark:autofill:shadow-autofill dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0" type="text" />
-                        <button
-                            type="submit"
-                            className="inline-block rounded border-2 bg-neutral-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-600 shadow-light-3 transition duration-150 ease-in-out hover:bg-neutral-200 hover:shadow-light-2 focus:bg-neutral-200 focus:shadow-light-2 focus:outline-none focus:ring-0 active:bg-neutral-200 active:shadow-light-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
-                            Enviar
-                        </button>
+                        {!isLoading ?
+                            <button
+                                type="submit"
+                                className="inline-block rounded border-2 bg-neutral-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-600 shadow-light-3 transition duration-150 ease-in-out hover:bg-neutral-200 hover:shadow-light-2 focus:bg-neutral-200 focus:shadow-light-2 focus:outline-none focus:ring-0 active:bg-neutral-200 active:shadow-light-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
+                                Enviar
+                            </button>
+                            :
+                            <button
+                                disabled
+                                type="submit"
+                                className="inline-block rounded border-2 bg-neutral-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-light-3 transition duration-150 ease-in-out hover:bg-primary-dark hover:shadow-light-2 focus:bg-primary-dark focus:shadow-light-2 focus:outline-none focus:ring-0 active:bg-primary-dark active:shadow-light-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong">
+                                Enviar
+                            </button>
+                        }
                     </form>
 
                 </div>
